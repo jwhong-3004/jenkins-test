@@ -53,7 +53,7 @@ pipeline {
 */
   parameters {
     // Git commit variables
-    string(name: 'BRANCH', defaultValue: 'master', description: 'the branch name or tag name that triggered the build (without refs/heads/ or refs/tags/)')
+    string(name: 'BRANCH', defaultValue: 'main', description: 'the branch name or tag name that triggered the build (without refs/heads/ or refs/tags/)')
     string(name: 'NAME', defaultValue: 'test', description: 'name test')
   }
   environment {
