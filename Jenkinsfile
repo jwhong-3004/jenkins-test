@@ -30,6 +30,31 @@ class EnvMap { // define constants
   }
 }
 
+
+final canDeployTo(String targetEnv) {
+  if (targetEnv == null || targetEnv.isAllWhitespace()) {
+    throw new Error("Unsupported environment code to deploy - cause: your input (empty)")
+  }
+  switch (targetEnv.toUpperCase()) {
+    case 'DEV':
+      return { anyOf {
+        expression { isTrunkBranch() } // trunk
+      }}
+    case 'STG':
+      return { anyOf {
+        expression { isNextCandidateTag() } // Case 1. Next candidate (X.Y.Z-rcN)
+        expression { isStableCandidateTag() } // Case 2. Stable candidate (X.Y.Z)
+      }}
+    case 'PRD':
+      return { anyOf {
+        expression { isStableCandidateTag() } // Case 1. Stable candidate (X.Y.Z)
+        expression { isEmergencyCandidateTag() } // Case 2. Emergency candidate (X.Y.Z)
+      }}
+    default:
+      throw new Error("Unsupported environment code to deploy - cause: your input (" + targetEnv + ")")
+  }
+}
+
 def printParameters(params) {
     echo 'Parameters:'
     params.each { key, value ->
@@ -74,5 +99,35 @@ pipeline {
                 }
             }
         }
+    stage("DEV-Deployment") {
+      when { allof { expression { canDeployTo('DEV') } } }
+      steps {
+        echo "================================ ${STAGE_NAME} ================================"
+        script {
+          deployTo('dev')
+        }
+      }
     }
+
+    stage("STG-Deployment") {
+      when { expression { canDeployTo('STG') } }
+      steps {
+        echo "================================ ${STAGE_NAME} ================================"
+        script {
+          applovalReqquest('stg')
+          deployTo('stg')
+        }
+      }
+    }
+
+    stage("PRD-Deployment") {
+      when { expression { canDeployTo('PRD') } }
+      steps {
+        echo "================================ ${STAGE_NAME} ================================"
+        script {
+          applovalReqquest('prd')
+          deployTo('prd')
+        }
+      }
+    }      
 }
