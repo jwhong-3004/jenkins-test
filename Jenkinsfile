@@ -57,7 +57,7 @@ pipeline {
     string(name: 'NAME', defaultValue: 'test', description: 'name test')
   }
   environment {
-    TARGET_ENV = 'dev'
+    TARGET_ENV = 'stg'
     TF_INIT_VARS = "${new EnvMap().initMap(this, env.TARGET_ENV)}"
     TF_WORKSPACE_PATH = "./environment/${env.TF_WORKSPACE.toLowerCase()}"
     TF_IN_AUTOMATION = true
