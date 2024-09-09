@@ -1,4 +1,4 @@
-class EnvMap { // define constants
+class EnvMap { // define constants 
   private Map contexts = [
     dev: [
       AWS_REGION: 'ap-northeast-2',
