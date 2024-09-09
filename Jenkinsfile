@@ -50,12 +50,13 @@ pipeline {
         choice(name: 'NODE_VERSION', choices: ['N/A', '12.22.6', '14.17.6', '14.20.0', '16.19.0', '18.16.0', '20.3.1'], description: 'Select Node.js version')
         // 다른 환경변수들도 비슷한 방식으로 정의 가능
     }
-*/
+
   parameters {
     // Git commit variables
     string(name: 'BRANCH', defaultValue: 'main', description: 'the branch name or tag name that triggered the build (without refs/heads/ or refs/tags/)')
     string(name: 'NAME', defaultValue: 'test', description: 'name test')
   }
+*/
   environment {
     TARGET_ENV = 'stg'
     TF_INIT_VARS = "${new EnvMap().initMap(this, env.TARGET_ENV)}"
@@ -70,7 +71,6 @@ pipeline {
                     echo "TF_INIT_VARS: ${TF_INIT_VARS}"
                     echo "TF_WORKSPACE_PATH: ${TF_WORKSPACE_PATH}"
                     echo "TF_WORKSPACE: ${TF_WORKSPACE}"
-                    echo "BRANCH: ${BRANCH}"
                 }
             }
         }
