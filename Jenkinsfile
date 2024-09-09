@@ -30,6 +30,45 @@ class EnvMap { // define constants
   }
 }
 
+// Trunk (master)
+final isTrunkBranch() {
+  return {
+    allOf {
+      expression { env.BRANCH == 'master' }
+      expression { params.TRIGGER in ['PUSH EVENT', 'MANUAL', 'JENKINS-UI'] }
+    }
+  }
+}
+
+// Next candidate (X.Y.Z-rcN)
+final isNextCandidateTag() {
+  return {
+    allOf {
+      expression { env.BRANCH =~ /^\d+\.\d+\.\d+-rc\d+$/ }
+      expression { params.TRIGGER in ['REF CREATED', 'MANUAL'] }
+    }
+  }
+}
+
+// Stable candidate (X.Y.Z)
+final isStableCandidateTag() {
+  return {
+    allOf {
+      expression { env.BRANCH =~ /^\d+\.\d+\.\d+$/ }
+      expression { params.TRIGGER in ['REF CREATED', 'MANUAL'] }
+    }
+  }
+}
+
+// Emergency candidate (X.Y.Z-hfN)
+final isEmergencyCandidateTag() {
+  return {
+    allOf {
+      expression { env.BRANCH =~ /^\d+\.\d+\.\d+-hf\d+$/ }
+      expression { params.TRIGGER in ['REF CREATED', 'MANUAL'] }
+    }
+  }
+}
 
 final canDeployTo(String targetEnv) {
   if (targetEnv == null || targetEnv.isAllWhitespace()) {
