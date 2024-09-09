@@ -70,6 +70,7 @@ pipeline {
                     echo "TF_INIT_VARS: ${TF_INIT_VARS}"
                     echo "TF_WORKSPACE_PATH: ${TF_WORKSPACE_PATH}"
                     echo "TF_WORKSPACE: ${TF_WORKSPACE}"
+                    echo "BRANCH: ${BRANCH}"
                 }
             }
         }
